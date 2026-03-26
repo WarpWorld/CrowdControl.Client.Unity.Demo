@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +8,15 @@ using UnityEngine;
 /// </summary>
 public class SphereBehavior : MonoBehaviour
 {
+    /// <summary>Gets the total number of active instances of the class.</summary>
+    public static int InstanceCount => s_activeBalls.Count;
+
+    /// <summary>Gets a read-only collection of all active sphere GameObjects.</summary>
+    public static IReadOnlyCollection<GameObject> ActiveBalls => s_activeBalls;
+
+    /// Internal list of active sphere GameObjects for tracking instance count and providing access to active spheres.
+    private static HashSet<GameObject> s_activeBalls { get; } = new();
+
     /// <summary>
     /// Rigidbody driving the sphere's motion.
     /// </summary>
@@ -27,6 +37,16 @@ public class SphereBehavior : MonoBehaviour
     /// Cache the world-space sphere radius once on awake.
     /// </summary>
     void Awake() => m_radius = GetWorldSphereRadius();
+
+    /// <summary>
+    /// Increment instance count on enable to track how many spheres are active in the scene.
+    /// </summary>
+    void OnEnable() => s_activeBalls.Add(gameObject);
+
+    /// <summary>
+    /// Decrement instance count on disable to track how many spheres are active in the scene.
+    /// </summary>
+    void OnDisable() => s_activeBalls.Remove(gameObject);
 
     /// <summary>
     /// Physics update: clamp position inside bounds and reflect velocity on wall hits.

@@ -4,13 +4,13 @@ using CrowdControl.Common;
 using JetBrains.Annotations;
 using UnityEngine;
 
-public class CreateBallEffect : UnityEffectBase
+public class CreateSpheres : UnityEffectBase
 {
     public GameObject BallPrefab;
 
     public Transform SpawnLocation;
 
-    public CreateBallEffect([NotNull] CrowdControl.Client.WebSocket.CrowdControl crowdControl, [NotNull] ClientSocket client) : base(crowdControl, client) { }
+    public CreateSpheres([NotNull] CrowdControl.Client.WebSocket.CrowdControl crowdControl, [NotNull] ClientSocket client) : base(crowdControl, client) { }
 
     public override EffectStatus StartEffect(EffectRequest request)
     {

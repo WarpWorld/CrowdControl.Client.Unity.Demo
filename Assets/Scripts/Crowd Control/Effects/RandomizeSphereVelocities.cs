@@ -4,9 +4,9 @@ using CrowdControl.Common;
 using JetBrains.Annotations;
 using UnityEngine;
 
-public class RandomizeBallVelocities : UnityEffectBase
+public class RandomizeSphereVelocities : UnityEffectBase
 {
-    public RandomizeBallVelocities([NotNull] CrowdControl.Client.WebSocket.CrowdControl crowdControl, [NotNull] ClientSocket client) : base(crowdControl, client) { }
+    public RandomizeSphereVelocities([NotNull] CrowdControl.Client.WebSocket.CrowdControl crowdControl, [NotNull] ClientSocket client) : base(crowdControl, client) { }
 
     public override EffectStatus StartEffect(EffectRequest request)
     {

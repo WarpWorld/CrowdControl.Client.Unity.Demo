@@ -159,6 +159,22 @@
         "com.unity.searcher": "4.9.3"
       }
     },
+    "com.unity.sysroot": {
+      "version": "2.0.10",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.sysroot.linux-x86_64": {
+      "version": "2.0.9",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.sysroot": "2.0.10"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.test-framework": {
       "version": "1.6.0",
       "depth": 0,
@@ -191,6 +207,16 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.toolchain.win-x86_64-linux-x86_64": {
+      "version": "2.0.11",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.sysroot": "2.0.10",
+        "com.unity.sysroot.linux-x86_64": "2.0.9"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.ugui": {
       "version": "2.0.0",
       "depth": 0,
@@ -217,7 +243,7 @@
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.2.2"
       },
-      "hash": "b5dcb21663e49a8592cd5d8673cc794bd7b6ff7b"
+      "hash": "9b2c3fc6d0042fe5b57c89cbb82293d876eedc3d"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
