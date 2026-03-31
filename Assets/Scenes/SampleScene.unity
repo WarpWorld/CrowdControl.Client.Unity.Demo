@@ -1178,6 +1178,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  SessionEndedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1897709717}
+        m_TargetAssemblyTypeName: StatusTextBehavior, Assembly-CSharp
+        m_MethodName: OnSessionEnded
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   AuthCodeReceivedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -1772,6 +1787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a8f949dd7a6db4288b4ca059412fa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TimeoutEnabled: 0
 --- !u!1 &2035515931
 GameObject:
   m_ObjectHideFlags: 0
@@ -1872,7 +1888,6 @@ MonoBehaviour:
   DefaultDuration: 0
   DefaultPrice: 0
   BallPrefab: {fileID: 378784341}
-  SpawnLocation: {fileID: 2067727649}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
