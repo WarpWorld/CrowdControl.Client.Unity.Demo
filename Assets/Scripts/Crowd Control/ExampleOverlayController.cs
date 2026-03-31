@@ -1,9 +1,14 @@
 using CrowdControl.Client.Unity;
 using CrowdControl.Common;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 public class ExampleOverlayController : MonoBehaviour
 {
+    private ConcurrentDictionary<string, EffectRequest> m_queuedEffects = new();
+
+    private ConcurrentDictionary<string, EffectRequest> m_activeEffects = new();
+
     private void Update()
     {
         //manage your overlay state here based on m_queuedEffects and m_activeEffects
