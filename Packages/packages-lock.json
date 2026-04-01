@@ -38,6 +38,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.editorcoroutines": {
+      "version": "1.0.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.ext.nunit": {
       "version": "2.0.5",
       "depth": 1,
@@ -241,9 +248,10 @@
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.2"
+        "com.unity.nuget.newtonsoft-json": "3.2.2",
+        "com.unity.editorcoroutines": "1.0.1"
       },
-      "hash": "9b2c3fc6d0042fe5b57c89cbb82293d876eedc3d"
+      "hash": "d850e8bc523d0ae6ee0ead5f396c4f3dabd725bf"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",

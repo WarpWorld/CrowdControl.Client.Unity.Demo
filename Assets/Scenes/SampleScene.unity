@@ -518,7 +518,7 @@ MonoBehaviour:
   target: {fileID: 378784345}
   groundCollider: {fileID: 104494127}
   offset: {x: 0, y: 1, z: -5}
-  smoothSpeed: 5
+  smoothSpeed: 10
   preferredPitchDegrees: 10
 --- !u!1 &374623369
 GameObject:
@@ -1388,11 +1388,35 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 445536992}
+        m_TargetAssemblyTypeName: ConnectButtonBehavior, Assembly-CSharp
+        m_MethodName: OnSessionReady
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   SessionEndedEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1897709717}
         m_TargetAssemblyTypeName: StatusTextBehavior, Assembly-CSharp
+        m_MethodName: OnSessionEnded
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 445536992}
+        m_TargetAssemblyTypeName: ConnectButtonBehavior, Assembly-CSharp
         m_MethodName: OnSessionEnded
         m_Mode: 1
         m_Arguments:
@@ -1430,6 +1454,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 445536992}
+        m_TargetAssemblyTypeName: ConnectButtonBehavior, Assembly-CSharp
+        m_MethodName: OnAuthCodeReceived
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   AuthCodeRedeemedReceivedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -1450,6 +1486,18 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1897709717}
         m_TargetAssemblyTypeName: StatusTextBehavior, Assembly-CSharp
+        m_MethodName: OnAuthCodeErrorReceived
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 445536992}
+        m_TargetAssemblyTypeName: ConnectButtonBehavior, Assembly-CSharp
         m_MethodName: OnAuthCodeErrorReceived
         m_Mode: 0
         m_Arguments:
@@ -1620,7 +1668,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &869643898
 MonoBehaviour:
   m_ObjectHideFlags: 0
