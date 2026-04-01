@@ -2,6 +2,7 @@ using CrowdControl.Client.WebSocket.Data;
 using TMPro;
 using UnityEngine;
 
+[RequireComponent(typeof(TextMeshProUGUI))]
 public class StatusTextBehavior : MonoBehaviour
 {
     public bool TimeoutEnabled = false;
