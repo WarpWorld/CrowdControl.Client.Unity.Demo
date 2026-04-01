@@ -1,7 +1,5 @@
 using CrowdControl.Client.Unity;
-using CrowdControl.Client.WebSocket;
 using CrowdControl.Common;
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class CreateSpheres : UnityEffectBase
@@ -22,8 +20,6 @@ public class CreateSpheres : UnityEffectBase
             return m_cameraFollow.target.transform;
         }
     }
-
-    public CreateSpheres([NotNull] CrowdControl.Client.WebSocket.CrowdControl crowdControl, [NotNull] ClientSocket client) : base(crowdControl, client) { }
 
     protected override void Awake()
     {

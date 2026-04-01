@@ -432,7 +432,7 @@ MonoBehaviour:
   Conflicts: []
   Morality: 0
   Orderliness: -90
-  DefaultDuration: 10
+  DefaultDuration: 5
   DefaultPrice: 1
 --- !u!1 &378784341
 GameObject:
