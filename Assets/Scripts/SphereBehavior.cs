@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Keeps a physics-driven sphere inside the bounding box defined by a ground collider.
@@ -8,6 +9,18 @@ using UnityEngine;
 /// </summary>
 public class SphereBehavior : MonoBehaviour
 {
+    /// <summary>The default movement speed.</summary>
+    private static readonly Vector2 MOVEMENT_SPEED = new(5f, 5f);
+
+    /// <summary>The default movement speed.</summary>
+    private static readonly Vector3 JUMP_FORCE = new(0f, 5f, 0f);
+
+    /// Maximum velocity magnitude to prevent excessive speeds from accumulating.
+    private const float MAX_VELOCITY = 10f;
+
+    /// <summary>Main camera in the scene, used for camera-relative controls.</summary>
+    private Camera m_camera;
+
     /// <summary>Gets the total number of active instances of the class.</summary>
     public static int InstanceCount => s_activeBalls.Count;
 
@@ -17,15 +30,14 @@ public class SphereBehavior : MonoBehaviour
     /// Internal list of active sphere GameObjects for tracking instance count and providing access to active spheres.
     private static HashSet<GameObject> s_activeBalls { get; } = new();
 
-    /// <summary>
-    /// Rigidbody driving the sphere's motion.
-    /// </summary>
+    /// <summary>Rigidbody driving the sphere's motion.</summary>
     public Rigidbody RigidBody;
 
-    /// <summary>
-    /// Collider whose world-space bounds define the allowable X/Z area and the ground top for Y.
-    /// </summary>
+    /// <summary>Collider whose world-space bounds define the allowable X/Z area and the ground top for Y.</summary>
     public Collider GroundCollider;
+
+    /// <summary>The behavior that manages coin count and associated GUI.</summary>
+    public CoinManagerBehavior CoinManager;
 
     /// <summary>
     /// Cached world-space sphere radius for fast boundary tests.
@@ -34,27 +46,81 @@ public class SphereBehavior : MonoBehaviour
     private float m_radius;
 
     /// <summary>
+    /// Input system actions for this sphere.
+    /// </summary>
+    private InputSystem_Actions m_input;
+
+    /// <summary>
+    /// Latest movement input value (updated by input callbacks) for continuous application.
+    /// </summary>
+    private Vector2 m_moveInput;
+
+    [SerializeField]
+    private float m_groundProbeDistance = 0.2f;
+
+    [SerializeField]
+    private LayerMask m_groundMask = ~0;
+
+    /// <summary>
     /// Cache the world-space sphere radius once on awake.
     /// </summary>
-    void Awake() => m_radius = GetWorldSphereRadius();
+    void Awake()
+    {
+        m_camera = Camera.main;
+        m_input = new InputSystem_Actions();
+        m_input.Player.Move.performed += OnMove;
+        m_input.Player.Move.canceled += OnMove;
+        m_input.Player.Jump.performed += OnJump;
+        m_radius = GetWorldSphereRadius();
+    }
 
     /// <summary>
-    /// Increment instance count on enable to track how many spheres are active in the scene.
+    /// On enable, add this sphere to the active set and enable its input actions.
     /// </summary>
-    void OnEnable() => s_activeBalls.Add(gameObject);
+    void OnEnable()
+    {
+        s_activeBalls.Add(gameObject);
+        m_input?.Player.Enable();
+    }
 
     /// <summary>
-    /// Decrement instance count on disable to track how many spheres are active in the scene.
+    /// On disable, remove this sphere from the active set and disable its input actions.
     /// </summary>
-    void OnDisable() => s_activeBalls.Remove(gameObject);
+    void OnDisable()
+    {
+        m_input?.Player.Disable();
+        s_activeBalls.Remove(gameObject);
+    }
+
+    /// <summary>
+    /// Apply input as a force to the sphere's Rigidbody in the X/Z plane, allowing player control of the sphere's motion.
+    /// </summary>
+    /// <param name="input">The input context containing the movement vector.</param>
+    private void OnMove(InputAction.CallbackContext input)
+    {
+        m_moveInput = input.ReadValue<Vector2>();
+    }
+
+    /// <summary>
+    /// Handles the jump input action when triggered by the user.
+    /// </summary>
+    /// <param name="input">The context for the input action, containing information about the input event and its state.</param>
+    private void OnJump(InputAction.CallbackContext input) => RigidBody.AddForce(JUMP_FORCE, ForceMode.Impulse);
 
     /// <summary>
     /// Physics update: clamp position inside bounds and reflect velocity on wall hits.
     /// </summary>
     void FixedUpdate()
     {
+        if (!RigidBody) return; // nothing to move or constrain
+
+        ApplyMovement();
+
+        // Clamp velocity to prevent excessive speeds
+        if (RigidBody.linearVelocity.magnitude > MAX_VELOCITY)
+            RigidBody.linearVelocity = RigidBody.linearVelocity.normalized * MAX_VELOCITY;
+
         if (!GroundCollider) return; // nothing to constrain against
-        if (!RigidBody) return; // nothing to constrain against
 
         Bounds bounds = GroundCollider.bounds;
 
@@ -88,6 +154,46 @@ public class SphereBehavior : MonoBehaviour
         if (RigidBody) RigidBody.linearVelocity = vel;
     }
 
+    private void ApplyMovement()
+    {
+        if (!RigidBody) return;
+        if (!m_camera) return;
+
+        Vector2 movement = m_moveInput * MOVEMENT_SPEED;
+        if (movement.sqrMagnitude <= 0f) return;
+
+        Vector3 forward = m_camera.transform.forward;
+        Vector3 right = m_camera.transform.right;
+
+        // flatten to XZ plane
+        forward.y = 0f;
+        right.y = 0f;
+
+        forward.Normalize();
+        right.Normalize();
+
+        Vector3 move = forward * movement.y + right * movement.x;
+        //move = ProjectMoveOntoGround(move);
+        RigidBody.AddForce(move);
+    }
+
+    private Vector3 ProjectMoveOntoGround(Vector3 move)
+    {
+        if (move.sqrMagnitude <= 0f) return move;
+
+        Vector3 origin = transform.position + Vector3.up * 0.05f;
+        float rayLength = m_radius + Mathf.Max(0.01f, m_groundProbeDistance);
+
+        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, rayLength, m_groundMask, QueryTriggerInteraction.Ignore))
+        {
+            Vector3 normal = hit.normal;
+            if (normal.sqrMagnitude > 0.0001f)
+                return Vector3.ProjectOnPlane(move, normal);
+        }
+
+        return move;
+    }
+
     /// <summary>
     /// Compute the sphere's world-space radius from its SphereCollider and transform scale.
     /// </summary>
@@ -98,5 +204,14 @@ public class SphereBehavior : MonoBehaviour
         Vector3 s = transform.lossyScale;
         float maxScale = Mathf.Max(s.x, Mathf.Max(s.y, s.z));
         return sc.radius * maxScale;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other) return;
+        if (!other.CompareTag("Coin")) return;
+        if (!CoinManager) return;
+
+        CoinManager.TryCollectCoin(other.gameObject);
     }
 }

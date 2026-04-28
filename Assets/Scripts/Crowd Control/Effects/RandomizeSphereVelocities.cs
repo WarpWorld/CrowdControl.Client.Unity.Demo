@@ -16,14 +16,16 @@ public class RandomizeSphereVelocities : UnityEffectBase
         if (sphereBehavior.TryGetComponent(out Rigidbody rb))
         {
             //linear velocity
-            Vector3 randomDirection = Random.onUnitSphere;
-            float randomSpeed = Random.Range(5f, 15f);
+            Vector2 linearDir2D = Random.insideUnitCircle.normalized;
+            Vector3 randomDirection = new Vector3(linearDir2D.x, 0f, linearDir2D.y);
+            float randomSpeed = Random.Range(5f, 10f);
             rb.linearVelocity = randomDirection * randomSpeed;
             
-            //angular velocity
-            Vector3 randomAngularDirection = Random.onUnitSphere;
-            float randomAngularSpeed = Random.Range(5f, 15f);
-            rb.angularVelocity = randomAngularDirection * randomAngularSpeed;
+            /*//angular velocity
+            Vector2 angularDir2D = Random.insideUnitCircle.normalized;
+            Vector3 randomAngularDirection = new Vector3(angularDir2D.x, 0f, angularDir2D.y);
+            float randomAngularSpeed = Random.Range(5f, 10f);
+            rb.angularVelocity = randomAngularDirection * randomAngularSpeed;*/
         }
     }
 }
