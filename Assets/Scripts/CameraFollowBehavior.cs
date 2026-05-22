@@ -9,6 +9,7 @@ public class CameraFollowBehavior : MonoBehaviour
 {
     private Vector3 m_baseOffset;
     private float m_orbitAngleDegrees;
+    private float m_zoomMultiplier = 1f;
 
     /// <summary>
     /// The transform to follow.
@@ -30,7 +31,7 @@ public class CameraFollowBehavior : MonoBehaviour
     /// Follow speed used for smoothing.
     /// </summary>
     [Range(0f, 20f)]
-    public float smoothSpeed = 5f; // follow speed
+    public float smoothSpeed = 10f; // follow speed
 
     /// <summary>
     /// Rotation sensitivity when dragging with the middle mouse button.
@@ -45,10 +46,10 @@ public class CameraFollowBehavior : MonoBehaviour
     public float rightStickRotationSpeed = 180f;
 
     /// <summary>
-    /// Optional legacy input axis name for the gamepad right stick horizontal input.
-    /// Leave empty when using the Input System package.
+    /// Zoom sensitivity applied to mouse scroll wheel input.
     /// </summary>
-    public string legacyRightStickHorizontalAxis = string.Empty;
+    [Range(0f, 50f)]
+    public float mouseScrollZoomSensitivity = 10f;
 
     /// <summary>
     /// Preferred viewing angle (pitch/tilt in degrees).
@@ -56,9 +57,25 @@ public class CameraFollowBehavior : MonoBehaviour
     [Range(0f, 89f)]
     public float preferredPitchDegrees = 10f;
 
-    private void Awake()
+    void Awake() => m_baseOffset = offset;
+
+    /// <summary>
+    /// Handles user input from the mouse and gamepad to update the zoom level and orbit angle of the camera each frame.
+    /// </summary>
+    void Update()
     {
-        m_baseOffset = offset;
+        if (Mouse.current != null)
+        {
+            float inputSystemScrollY = -Mouse.current.scroll.ReadValue().y;
+            if (inputSystemScrollY != 0f)
+                m_zoomMultiplier = Mathf.Clamp(m_zoomMultiplier + (Mathf.Sign(inputSystemScrollY) * mouseScrollZoomSensitivity * Time.deltaTime), 0.5f, 2f);
+
+            if (Mouse.current.middleButton.isPressed)
+                m_orbitAngleDegrees += Mouse.current.delta.ReadValue().x * middleMouseDragSensitivity * Time.deltaTime;
+        }
+
+        if (Gamepad.current != null)
+            m_orbitAngleDegrees += Gamepad.current.rightStick.ReadValue().x * rightStickRotationSpeed * Time.deltaTime;
     }
 
     /// <summary>
@@ -68,20 +85,7 @@ public class CameraFollowBehavior : MonoBehaviour
     {
         if (!target) return;
 
-        float orbitDeltaDegrees = 0f;
-
-        if (Input.GetMouseButton(2))
-            orbitDeltaDegrees += Input.GetAxis("Mouse X") * middleMouseDragSensitivity;
-
-        if (Gamepad.current != null)
-            orbitDeltaDegrees += Gamepad.current.rightStick.ReadValue().x * rightStickRotationSpeed * Time.deltaTime;
-
-        if (!string.IsNullOrWhiteSpace(legacyRightStickHorizontalAxis))
-            orbitDeltaDegrees += Input.GetAxis(legacyRightStickHorizontalAxis) * rightStickRotationSpeed * Time.deltaTime;
-
-        m_orbitAngleDegrees += orbitDeltaDegrees;
-
-        Vector3 orbitOffset = Quaternion.Euler(0f, m_orbitAngleDegrees, 0f) * m_baseOffset;
+        Vector3 orbitOffset = Quaternion.Euler(0f, m_orbitAngleDegrees, 0f) * (m_baseOffset * m_zoomMultiplier);
         Vector3 desiredPosition = target.position + orbitOffset;
 
         // Clamp desired position within ground-defined bounds using collider

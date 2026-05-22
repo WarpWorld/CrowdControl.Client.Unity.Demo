@@ -13,7 +13,7 @@ public class ConnectButtonBehavior : MonoBehaviour
 
     private void Awake()
     {
-        m_ccBehavior = FindFirstObjectByType<CrowdControlBehavior>();
+        m_ccBehavior = FindAnyObjectByType<CrowdControlBehavior>();
         m_buttonText = GetComponentInChildren<TextMeshProUGUI>();
     }
 

@@ -3,7 +3,7 @@ using CrowdControl.Common;
 using System.Linq;
 using UnityEngine;
 
-public class HalveBallEffect : UnityEffectBase
+public class HalveSpheres : UnityEffectBase
 {
     private Transform m_cameraFollow;
 

@@ -6,6 +6,8 @@ public class CreateSpheres : UnityEffectBase
 {
     public GameObject BallPrefab;
 
+    public bool ShowNameplateOnSpawns = true;
+
     private Camera m_camera;
 
     private CameraFollowBehavior m_cameraFollow;
@@ -34,7 +36,19 @@ public class CreateSpheres : UnityEffectBase
 
         //add a meter in the camera look direction and spawn the ball there
         Vector3 position = SpawnLocation.position + SPAWN_OFFSET;
-        Instantiate(BallPrefab, position, Quaternion.identity);
+        GameObject newSphere = Instantiate(BallPrefab, position, Quaternion.identity);
+        if (ShowNameplateOnSpawns)
+        {
+            string displayViewer = request.DisplayViewer;
+            if ((!string.IsNullOrEmpty(displayViewer)))
+            {
+                SphereBehavior sphereBehavior = newSphere.GetComponent<SphereBehavior>();
+                if (sphereBehavior)
+                    sphereBehavior.ShowNameplate(displayViewer);
+            }
+        }
+        //newSphere.SetActive(true);
+
         return EffectStatus.Success;
     }
 }

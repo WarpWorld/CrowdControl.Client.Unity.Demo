@@ -6,7 +6,7 @@ public class RandomizeSphereVelocities : UnityEffectBase
 {
     public override EffectStatus StartEffect(EffectRequest request)
     {
-        foreach (SphereBehavior sphereBehavior in FindObjectsByType<SphereBehavior>(FindObjectsSortMode.None)) SetRandomVelocity(sphereBehavior);
+        foreach (SphereBehavior sphereBehavior in FindObjectsByType<SphereBehavior>()) SetRandomVelocity(sphereBehavior);
 
         return EffectStatus.Success;
     }

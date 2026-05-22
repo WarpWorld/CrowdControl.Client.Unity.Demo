@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +18,9 @@ public class SphereBehavior : MonoBehaviour
 
     /// Maximum velocity magnitude to prevent excessive speeds from accumulating.
     private const float MAX_VELOCITY = 10f;
+
+    /// <summary>Represents the multiplier applied to input values, used to reverse input vectors.</summary>
+    public static Vector3 InputMultiplier = Vector3.one;
 
     /// <summary>Main camera in the scene, used for camera-relative controls.</summary>
     private Camera m_camera;
@@ -38,6 +42,9 @@ public class SphereBehavior : MonoBehaviour
 
     /// <summary>The behavior that manages coin count and associated GUI.</summary>
     public CoinManagerBehavior CoinManager;
+
+    /// <summary>Optional nameplate object to display as a child of the sphere for player identification.</summary>
+    public TextMeshPro Nameplate;
 
     /// <summary>
     /// Cached world-space sphere radius for fast boundary tests.
@@ -67,6 +74,7 @@ public class SphereBehavior : MonoBehaviour
     void Awake()
     {
         m_camera = Camera.main;
+        if (!RigidBody) RigidBody = GetComponent<Rigidbody>(); //try to find a Rigidbody if not assigned, required for movement controls and boundary reflection on fresh spheres
         m_input = new InputSystem_Actions();
         m_input.Player.Move.performed += OnMove;
         m_input.Player.Move.canceled += OnMove;
@@ -96,16 +104,42 @@ public class SphereBehavior : MonoBehaviour
     /// Apply input as a force to the sphere's Rigidbody in the X/Z plane, allowing player control of the sphere's motion.
     /// </summary>
     /// <param name="input">The input context containing the movement vector.</param>
-    private void OnMove(InputAction.CallbackContext input)
-    {
-        m_moveInput = input.ReadValue<Vector2>();
-    }
+    private void OnMove(InputAction.CallbackContext input) => m_moveInput = input.ReadValue<Vector2>() * InputMultiplier;
 
     /// <summary>
     /// Handles the jump input action when triggered by the user.
     /// </summary>
     /// <param name="input">The context for the input action, containing information about the input event and its state.</param>
-    private void OnJump(InputAction.CallbackContext input) => RigidBody.AddForce(JUMP_FORCE, ForceMode.Impulse);
+    private void OnJump(InputAction.CallbackContext input) => TryJump();
+
+    public bool TryJump()
+    {
+        if (!RigidBody || !IsGrounded()) return false;
+        RigidBody.AddForce(JUMP_FORCE, ForceMode.Impulse);
+        return true;
+    }
+
+    /// <summary>
+    /// Displays the nameplate with the specified name above the sphere.
+    /// </summary>
+    /// <param name="name">The name to display on the nameplate.</param>
+    /// <remarks>If the nameplate is already active, this method will update the displayed name.</remarks>
+    public void ShowNameplate(string name)
+    {
+        if (!Nameplate) return;
+        Nameplate.text = name;
+        Nameplate.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Hides the nameplate by deactivating its associated GameObject.
+    /// </summary>
+    /// <remarks>If the nameplate is already hidden or not assigned, this method has no effect.</remarks>
+    public void HideNameplate()
+    {
+        if (!Nameplate) return;
+        Nameplate.gameObject.SetActive(false);
+    }
 
     /// <summary>
     /// Physics update: clamp position inside bounds and reflect velocity on wall hits.
@@ -133,18 +167,22 @@ public class SphereBehavior : MonoBehaviour
         bool hitZMax = pos.z + m_radius > bounds.max.z;
 
         // Reflect velocity components on boundary hits and clamp position to stay inside
-        if (hitXMin) {
+        if (hitXMin)
+        {
             pos.x = bounds.min.x + m_radius;
             if (vel.x < 0f) vel.x = -vel.x; // perfectly elastic
-        } else if (hitXMax) {
+        } else if (hitXMax)
+        {
             pos.x = bounds.max.x - m_radius;
             if (vel.x > 0f) vel.x = -vel.x;
         }
 
-        if (hitZMin) {
+        if (hitZMin)
+        {
             pos.z = bounds.min.z + m_radius;
             if (vel.z < 0f) vel.z = -vel.z;
-        } else if (hitZMax) {
+        } else if (hitZMax)
+        {
             pos.z = bounds.max.z - m_radius;
             if (vel.z > 0f) vel.z = -vel.z;
         }
@@ -192,6 +230,18 @@ public class SphereBehavior : MonoBehaviour
         }
 
         return move;
+    }
+
+    private bool IsGrounded()
+    {
+        float rayLength = m_radius + Mathf.Max(0.01f, m_groundProbeDistance);
+        return Physics.Raycast(
+            transform.position,
+            Vector3.down,
+            out RaycastHit hit,
+            rayLength,
+            m_groundMask,
+            QueryTriggerInteraction.Ignore) && hit.normal.y > 0.1f;
     }
 
     /// <summary>

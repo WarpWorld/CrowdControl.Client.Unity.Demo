@@ -12,7 +12,7 @@ public class ClearButtonBehavior : MonoBehaviour
 
     void Awake()
     {
-        m_ccBehavior = FindFirstObjectByType<CrowdControlBehavior>();
+        m_ccBehavior = FindAnyObjectByType<CrowdControlBehavior>();
         m_button = GetComponentInChildren<Button>();
         m_buttonText = GetComponentInChildren<TextMeshProUGUI>();
     }
