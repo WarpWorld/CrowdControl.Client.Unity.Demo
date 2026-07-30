@@ -1,6 +1,7 @@
 using CrowdControl.Client.Unity;
 using CrowdControl.Common;
 using UnityEngine;
+using EffectResponse = CrowdControl.Client.WebSocket.EffectResponse;
 
 public class CreateSpheres : UnityEffectBase
 {
@@ -30,7 +31,7 @@ public class CreateSpheres : UnityEffectBase
         base.Awake();
     }
 
-    public override EffectStatus StartEffect(EffectRequest request)
+    public override EffectResponse StartEffect(EffectRequest request)
     {
         if ((!m_camera) || (!BallPrefab) || (!SpawnLocation)) return EffectStatus.FailPermanent;
 

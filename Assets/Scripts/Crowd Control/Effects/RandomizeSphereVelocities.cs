@@ -1,10 +1,11 @@
 using CrowdControl.Client.Unity;
 using CrowdControl.Common;
 using UnityEngine;
+using EffectResponse = CrowdControl.Client.WebSocket.EffectResponse;
 
 public class RandomizeSphereVelocities : UnityEffectBase
 {
-    public override EffectStatus StartEffect(EffectRequest request)
+    public override EffectResponse StartEffect(EffectRequest request)
     {
         foreach (SphereBehavior sphereBehavior in FindObjectsByType<SphereBehavior>()) SetRandomVelocity(sphereBehavior);
 

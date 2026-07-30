@@ -1,9 +1,10 @@
 ﻿using CrowdControl.Client.Unity;
 using CrowdControl.Common;
+using EffectResponse = CrowdControl.Client.WebSocket.EffectResponse;
 
 public class Jump : UnityEffectBase
 {
-    public override EffectStatus StartEffect(EffectRequest request)
+    public override EffectResponse StartEffect(EffectRequest request)
     {
         bool success = false;
         foreach (SphereBehavior sphereBehavior in FindObjectsByType<SphereBehavior>())

@@ -20,9 +20,6 @@ public class NumberOfSpheres : UnityMetadataBase<int>
     /// <summary>Cache of the last known value of the metadata to detect changes and trigger updates.</summary>
     private int m_oldValue = 0;
 
-    /// <inheritdoc cref="IMetadata.Updated"/>
-    public override event Action Updated;
-
     /// <summary>
     /// Attempts to serialize the current object to a JToken representation.
     /// </summary>
@@ -50,7 +47,7 @@ public class NumberOfSpheres : UnityMetadataBase<int>
         if (newValue != m_oldValue)
         {
             m_oldValue = newValue;
-            Updated?.Invoke();
+            OnUpdated();
         }
     }
 }

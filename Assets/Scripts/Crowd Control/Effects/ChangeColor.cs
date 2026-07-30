@@ -1,6 +1,7 @@
 ﻿using CrowdControl.Client.Unity;
 using CrowdControl.Common;
 using UnityEngine;
+using EffectResponse = CrowdControl.Client.WebSocket.EffectResponse;
 
 public class ChangeColor : UnityEffectBase
 {
@@ -12,7 +13,7 @@ public class ChangeColor : UnityEffectBase
         base.Awake();
     }
 
-    public override EffectStatus StartEffect(EffectRequest request)
+    public override EffectResponse StartEffect(EffectRequest request)
     {
         if (SphereBehavior.InstanceCount == 0)
             return EffectStatus.FailTemporary;

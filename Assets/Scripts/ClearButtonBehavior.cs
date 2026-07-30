@@ -17,7 +17,9 @@ public class ClearButtonBehavior : MonoBehaviour
         m_buttonText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
-    void OnEnable()
+    void OnEnable() => Initialize();
+
+    public void Initialize()
     {
         if (CrowdControlBehavior.IsStoredTokenValid)
             OnValidToken();
@@ -27,7 +29,6 @@ public class ClearButtonBehavior : MonoBehaviour
             m_button.interactable = false;
             m_buttonText.text = "No Stored Token";
         }
-
     }
 
     public void OnValidToken()

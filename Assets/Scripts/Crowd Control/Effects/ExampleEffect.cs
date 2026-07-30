@@ -1,12 +1,13 @@
 ﻿using CrowdControl.Client.Unity;
 using CrowdControl.Common;
 using UnityEngine;
+using EffectResponse = CrowdControl.Client.WebSocket.EffectResponse;
 
 namespace Assets.Scripts.Crowd_Control.Effects
 {
     internal class ExampleEffect : UnityEffectBase
     {
-        public override EffectStatus StartEffect(EffectRequest request)
+        public override EffectResponse StartEffect(EffectRequest request)
         {
             //example with a single parameter called "itemType" of type **string**
             Debug.Log($"ExampleEffect started with itemType: {(string)request.Parameters["itemType"].Value}.");
@@ -14,7 +15,7 @@ namespace Assets.Scripts.Crowd_Control.Effects
             return EffectStatus.Success;
         }
 
-        public override EffectStatus? TickEffect(EffectRequest request)
+        public override EffectResponse? TickEffect(EffectRequest request)
         {
             Debug.Log("ExampleEffect tick...");
 
@@ -26,7 +27,7 @@ namespace Assets.Scripts.Crowd_Control.Effects
             return null;
         }
 
-        public override EffectStatus? PauseEffect(EffectRequest request)
+        public override EffectResponse? PauseEffect(EffectRequest request)
         {
             Debug.Log("ExampleEffect paused...");
 
@@ -36,7 +37,7 @@ namespace Assets.Scripts.Crowd_Control.Effects
             return null;
         }
 
-        public override EffectStatus? ResumeEffect(EffectRequest request)
+        public override EffectResponse? ResumeEffect(EffectRequest request)
         {
             Debug.Log("ExampleEffect resumed...");
 
@@ -47,7 +48,7 @@ namespace Assets.Scripts.Crowd_Control.Effects
             return null;
         }
 
-        public override EffectStatus? StopEffect(EffectRequest request)
+        public override EffectResponse? StopEffect(EffectRequest request)
         {
             Debug.Log("ExampleEffect stopped...");
 

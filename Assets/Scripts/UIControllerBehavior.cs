@@ -19,11 +19,12 @@ public class UIControllerBehavior : MonoBehaviour
 
     void OnDisable()
     {
+        if (inputActions == null) return;
         inputActions.UI.ShowHide.performed -= OnShowHidePerformed;
         inputActions.UI.Disable();
     }
 
-    void OnDestroy() => inputActions.Dispose();
+    void OnDestroy() => inputActions?.Dispose();
 
     private void OnShowHidePerformed(InputAction.CallbackContext context) => ToggleUIElements();
 

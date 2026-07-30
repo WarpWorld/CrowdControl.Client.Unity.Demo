@@ -1,6 +1,7 @@
 using CrowdControl.Client.Unity;
 using CrowdControl.Common;
 using UnityEngine;
+using EffectResponse = CrowdControl.Client.WebSocket.EffectResponse;
 
 public class ReverseGravity : UnityEffectBase
 {
@@ -12,25 +13,25 @@ public class ReverseGravity : UnityEffectBase
         m_originalGravity = Physics.gravity;
     }
 
-    public override EffectStatus StartEffect(EffectRequest request)
+    public override EffectResponse StartEffect(EffectRequest request)
     {
         Physics.gravity = -m_originalGravity;
         return EffectStatus.Success;
     }
 
-    public override EffectStatus? PauseEffect(EffectRequest request)
+    public override EffectResponse? PauseEffect(EffectRequest request)
     {
         Physics.gravity = m_originalGravity;
         return EffectStatus.Success;
     }
 
-    public override EffectStatus? ResumeEffect(EffectRequest request)
+    public override EffectResponse? ResumeEffect(EffectRequest request)
     {
         Physics.gravity = -m_originalGravity;
         return EffectStatus.Success;
     }
 
-    public override EffectStatus? StopEffect(EffectRequest request)
+    public override EffectResponse? StopEffect(EffectRequest request)
     {
         Physics.gravity = m_originalGravity;
         return EffectStatus.Success;

@@ -1,5 +1,6 @@
 using CrowdControl.Client.Unity;
 using CrowdControl.Common;
+using EffectResponse = CrowdControl.Client.WebSocket.EffectResponse;
 
 public class GiveCoins : UnityEffectBase
 {
@@ -11,7 +12,7 @@ public class GiveCoins : UnityEffectBase
         m_coinManager = FindAnyObjectByType<CoinManagerBehavior>();
     }
 
-    public override EffectStatus StartEffect(EffectRequest request)
+    public override EffectResponse StartEffect(EffectRequest request)
     {
         if (!m_coinManager) return EffectStatus.FailTemporary;
         m_coinManager.AddCoins((int)request.Quantity);

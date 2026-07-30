@@ -11,7 +11,7 @@ public class ExampleGameStateManager : UnityGameStateManager
     /// Current game state value, editable in the Inspector.
     /// </summary>
     [SerializeField]
-    public GameState GameState = GameState.Ready;
+    public GameState GameState = GameState.InLevel;
 
     /// <summary>
     /// Returns the current <see cref="GameState"/>.
