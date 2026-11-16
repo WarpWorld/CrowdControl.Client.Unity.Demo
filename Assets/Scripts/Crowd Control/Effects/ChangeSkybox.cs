@@ -2,6 +2,7 @@
 using CrowdControl.Common;
 using System;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using EffectResponse = CrowdControl.Client.WebSocket.EffectResponse;
 
@@ -24,7 +25,8 @@ public class ChangeSkybox : UnityEffectBase
     public override void Initialize()
     {
         base.Initialize();
-        RenderSettings.skybox = GetNextMaterial();
+        if (!Application.isEditor)
+            RenderSettings.skybox = GetNextMaterial();
     }
 
     public Material GetNextMaterial()
